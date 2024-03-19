@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import{useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./admin.css"; // Import your CSS file
 
 const Admin = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [title, setTitle] = useState("");
@@ -12,8 +12,23 @@ const Admin = () => {
   const [image, setImage] = useState("");
   const [products, setProducts] = useState([]);
   const [editProduct, setEditProduct] = useState(null); // State to store the product being edited
+  const [loading, setLoading] = useState(true); // State to track loading status
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+    if (!token) {
+      return navigate("/login");
+    }
+    axios.interceptors.request.use(
+      (config) => {
+        config.headers.Authorization = `${token}`;
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
     fetchProducts();
   }, []);
 
@@ -23,6 +38,8 @@ const Admin = () => {
       setProducts(response.data.data);
     } catch (error) {
       console.error("Error fetching products:", error);
+    } finally {
+      setLoading(false); // Set loading to false after fetching data
     }
   };
 
@@ -91,64 +108,74 @@ const Admin = () => {
   };
 
   return (
-    <div className="admin-panel">
-      <h1>Admin Panel</h1>
-      <div className="product-form">
-        <h2>{editProduct ? "Edit Product" : "Add Product"}</h2>
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Type"
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Image Link"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-        />
-        <button onClick={editProduct ? handleSaveUpdate : handleAddProduct}>
-          {editProduct ? "Save" : "Add Product"}
-        </button>
-      </div>
-      <div className="product-list">
-        <h2>Products</h2>
-        <ul>
-          {products.map((product) => (
-            <li key={product._id}>
-              <img src={product.image} alt="" />
-              <p>Name: {product.name}</p>
-              <p>Price: ${product.price}</p>
-              <p>Title: {product.title}</p>
-              <p>Type: {product.type}</p>
-              <button onClick={() => handleDeleteProduct(product._id)}>
-                Delete
+    <div className="main">
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          <div className="admin-panel">
+            <h1>Admin Panel</h1>
+            <div className="product-form">
+              <h2>{editProduct ? "Edit Product" : "Add Product"}</h2>
+              <input
+                type="text"
+                placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Price"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Type"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Image Link"
+                value={image}
+                onChange={(e) => setImage(e.target.value)}
+              />
+              <button onClick={editProduct ? handleSaveUpdate : handleAddProduct}>
+                {editProduct ? "Save" : "Add Product"}
               </button>
-              <button onClick={() => handleUpdateProduct(product)}>
-                Update
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
+            </div>
+          </div>
+          <div className="product-panel">
+            <div className="product-list">
+              <h2>Products</h2>
+              <ul>
+                {products.map((product) => (
+                  <li key={product._id}>
+                    <img src={product.image} alt="" />
+                    <p>Name: {product.name}</p>
+                    <p>Price: ${product.price}</p>
+                    <p>Title: {product.title}</p>
+                    <p>Type: {product.type}</p>
+                    <button onClick={() => handleDeleteProduct(product._id)}>
+                      Delete
+                    </button>
+                    <button onClick={() => handleUpdateProduct(product)}>
+                      Update
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

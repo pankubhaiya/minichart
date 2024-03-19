@@ -14,7 +14,7 @@ app.get("/",(req,res)=>{
     res.send("wlc to home page")
 })
 app.use("/",userRouter)
-app.use("/",product)
+app.use("/",authMiddleware,product)
 app.listen(port,async()=>{
     console.log(`server is running ${port} `)
     try{

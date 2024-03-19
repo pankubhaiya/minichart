@@ -20,7 +20,7 @@ const authMiddleware = (req, res, next) => {
 };
 // adminMiddleware.js
 const adminMiddleware = (req, res, next) => {
-  if (req.user && req.user.role === "Admin") {
+  if ( req.user.role === "admin") {
     next();
   } else {
     return res.status(403).json({ message: "Forbidden: Access denied" });

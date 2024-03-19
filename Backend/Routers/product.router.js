@@ -3,16 +3,16 @@ require("dotenv").config()
 const {productModel} = require("../Models/product.model")
 const product = express.Router()
 product.use(express.json())
+const adminMiddleware = require("../Midelware/index")
 
-
-product.post("/add",async(req,res)=>{
-    const {name,price,title,type} = req.body
+product.post("/add",adminMiddleware,async(req,res)=>{
+    const {name,price,title,type,image} = req.body
       
     try{
         if(!name || !price || !title ||!type || !image){
             return res.status(500).send("please fill the all field")
         }
-        const product = new productModel({name,price,title,type})
+        const product = new productModel({name,price,title,type,image})
          await product.save()
          res.status(200).send("product save succesfull")
     }catch(err){
@@ -32,7 +32,7 @@ product.get("/all",async(req,res)=>{
        res.status(500).send("server error")
     }
 })
-product.patch("/update/:id",async(req,res)=>{
+product.patch("/update/:id",adminMiddleware,async(req,res)=>{
    
     try{    
         const product = await productModel.findOneAndUpdate({_id:req.params.id},req.body)
@@ -43,7 +43,7 @@ product.patch("/update/:id",async(req,res)=>{
     }
 
 })
-product.delete("/delete/:id",async(req,res)=>{
+product.delete("/delete/:id",adminMiddleware,async(req,res)=>{
       
     try{
         const product = await productModel.findOneAndDelete({_id:req.params.id},req.body)
