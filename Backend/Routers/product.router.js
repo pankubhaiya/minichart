@@ -9,7 +9,7 @@ product.post("/add",async(req,res)=>{
     const {name,price,title,type} = req.body
       
     try{
-        if(!name || !price || !title ||!type){
+        if(!name || !price || !title ||!type || !image){
             return res.status(500).send("please fill the all field")
         }
         const product = new productModel({name,price,title,type})

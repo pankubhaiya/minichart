@@ -1,27 +1,41 @@
+/* Navbar.css */
+
 .navbar {
-    background-color: #c5afaf;
-    padding: 10px;
-    justify-content: space-between;
-  }
-  
-  .navbar-nav {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .nav-item {
-    display: inline-block;
-    margin-right: 15px;
-  }
-  
-  .nav-link {
-    color: #fff;
-    text-decoration: none;
-    font-size: 16px;
-  }
-  
-  .nav-link:hover {
-    text-decoration: underline;
-  }
-  
+  background-color: #333;
+  padding: 10px;
+}
+
+.navbar-nav {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.nav-link {
+  color: #fff;
+  text-decoration: none;
+  padding: 5px 10px;
+}
+
+.nav-link:hover {
+  background-color: #555;
+  border-radius: 3px;
+}
+
+.logout-btn {
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+.logout-btn:hover {
+  background-color: #555;
+  border-radius: 3px;
+}

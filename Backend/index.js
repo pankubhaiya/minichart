@@ -5,7 +5,7 @@ const {connect} = require("./connection/index")
 const {userRouter} = require("./Routers/user.router")
 const { product } = require("./Routers/product.router")
 const app = express()
-
+const authMiddleware = require("./Midelware/index")
 app.use(express.json())
 app.use(cors());
 const port = 8000 || process.env.Port

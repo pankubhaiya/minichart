@@ -1,5 +1,5 @@
 import React, { useState, } from 'react';
-import {  Navigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 import axios from 'axios'; // Import axios for making HTTP requests
 
@@ -7,6 +7,7 @@ const LoginPage = () => {
   const [email, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -18,16 +19,15 @@ const LoginPage = () => {
       
       if (response.status === 200) {
         // Extract token and role from response
-        const { token, role } = response.data;
-  
+        const { username, role } = response.data.data;
+      
         // Save token and role in localStorage
-        localStorage.setItem('token', token);
+        localStorage.setItem('token', response.data.jwt);
         localStorage.setItem('role', role);
-  
-        // Optionally, you can redirect the user to another page upon successful login
         console.log("Login successful!");
-        console.log("Response data:", response.data);
+        console.log("Response data:", response.data,response.data.jwt);
         alert("Login successful!");
+        navigate("/product")
       } else {
         alert(response.data);
       }
