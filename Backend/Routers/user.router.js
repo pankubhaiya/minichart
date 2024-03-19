@@ -6,7 +6,7 @@ const userRouter = express.Router()
 userRouter.use(express.json())
 
 userRouter.post("/signup",async(req,res)=>{
-    const {email,username,password} = req.body
+    const {email,username,password,role} = req.body
 
     try{
         if(!email || !username || !password){
@@ -17,7 +17,7 @@ userRouter.post("/signup",async(req,res)=>{
         if(userpresent){
             return res.status(201).send("useralready present")
         }
-        const user  = new userModel({username,email,password,role:"user"}) 
+        const user  = new userModel({username,email,password,role}) 
         await user.save()
         res.status(200).send("signup successfull")
 
